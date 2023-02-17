@@ -1,6 +1,7 @@
 
 const section = document.querySelector('.recommendations');
 const arrCategory = [];
+const hrefSrc = window.location.href.split('/').slice(0, -1).join('/');
 
 // Рендер карточек и заголовков по категориям
 const categoryRender = async (category) => {
@@ -19,6 +20,11 @@ const categoryRender = async (category) => {
 
             const li  = document.createElement('li');
             li.classList.add('sale__item', `sale__item_${index+1}`);
+               // переход на страницу карточки по клику
+            li.addEventListener('click', (e) => {
+                localStorage.setItem('downloadableProduct', JSON.stringify(item.title));
+                window.location.href = `${hrefSrc}/card.html`;
+            })
             
             let oldPrice = data[index].price;
             let discount = 0;

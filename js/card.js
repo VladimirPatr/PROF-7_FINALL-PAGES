@@ -2,11 +2,10 @@ const cardSection = document.querySelector('.card');
 const cardDescription = document.querySelector('.card__description');
 const recommendationsSection = document.querySelector('.recommendations');
 const URLmain = 'http://localhost:3000/api/goods';
+const hrefSrc = window.location.href.split('/').slice(0, -1).join('/');
 
 // Функция рендера карточки
 const cardRender = (data) => {
-    console.log(data)
-
     //    заголовок карточки
         const title  = document.createElement('h2');
         title.classList.add('card__name');
@@ -86,17 +85,21 @@ const cardRender = (data) => {
         const cardText  = document.createElement('p');
         cardText.classList.add('card__description-text');
         cardText.innerText = data.description;
-
-        return cartFull = {title, cardWrapper, cardText}
+        
+        cartFull = {title, cardWrapper, cardText};
+        return cartFull
     }
 
 
 // Загрузка данных карточки при загрузке
 const init = () => {
+    const downloadableProduct = JSON.parse(localStorage.getItem('downloadableProduct'));
+    localStorage.removeItem('downloadableProduct');
+
     fetch(URLmain)
     .then((response) => response.json())
-    .then((data) => data[Math.floor(Math.random()*data.length)])
-    .then((item) => cardRender(item))
+    .then((data) => data.filter(item => item.title == downloadableProduct))
+    .then((item) => cardRender(item[0]))
     .then((full) => 
      cardSection.prepend(full.title, full.cardWrapper) &
      cardDescription.append(full.cardText)
@@ -118,6 +121,11 @@ const cardsRenderRecom = (data) => {
         data.forEach((item, index) => {  
           const li  = document.createElement('li');
           li.classList.add('sale__item', `sale__item_${index+1}`);
+          // переход на страницу карточки по клику
+          li.addEventListener('click', (e) => {
+            localStorage.setItem('downloadableProduct', JSON.stringify(item.title));
+            window.location.href = `${hrefSrc}/card.html`;
+          })
 
             let oldPrice = data[index].price;
             let discount = 0;
@@ -154,4 +162,7 @@ const initRecommendation = () => {
         console.log(err)
     })
 }
-    initRecommendation()
+initRecommendation()
+
+
+

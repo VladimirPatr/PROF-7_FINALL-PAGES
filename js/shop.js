@@ -9,6 +9,7 @@ const basketResultPrice = document.querySelector('.basket__result-price');
 const basketResultDiscount = document.querySelector('.basket__result-discount');
 const btnBasketDel = document.querySelector('.btn-basket-del');
 const basketCheckboxAll = document.querySelector('.basket__checkbox-all');
+const hrefSrc = window.location.href.split('/').slice(0, -1).join('/');
 
 
 // Функция рендера карточек для секции Рекомендуемые
@@ -20,6 +21,11 @@ const cardsRenderRecom = (data) => {
         data.forEach((item, index) => {  
           const li  = document.createElement('li');
           li.classList.add('sale__item', `sale__item_${index+1}`);
+            // переход на страницу карточки по клику
+            li.addEventListener('click', (e) => {
+                localStorage.setItem('downloadableProduct', JSON.stringify(item.title));
+                window.location.href = `${hrefSrc}/card.html`;
+            })
 
             let oldPrice = data[index].price;
             let discount = 0;
@@ -28,7 +34,7 @@ const cardsRenderRecom = (data) => {
                 oldPrice = Math.round(oldPrice + (oldPrice/100*discount));
                 li.classList.add('sale__item-discount');
                 li.dataset.text = `${data[index].discount}%`;
-              }   
+              }  
 
             li.insertAdjacentHTML('afterbegin',`
                 <img loading="lazy" src= http://localhost:3000/${item.image} alt="Картинка скидок" class="stock__img" width="325" height="295">

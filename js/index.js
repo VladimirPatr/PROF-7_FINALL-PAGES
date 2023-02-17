@@ -2,6 +2,7 @@ const menuBtn = document.querySelector('.header__menu');
 const navMenu = document.querySelector('.navbar-menu');
 const saleMain = document.querySelector('.sale__main');
 const URLmain = 'http://localhost:3000/api/goods';
+const hrefSrc = window.location.href.split('/').slice(0, -1).join('/');
 
 
 // Открытие меню по клику
@@ -17,7 +18,6 @@ const cardsRender = (data) => {
     if(data) {
        const listWrapper  = document.createElement('ul');
        listWrapper.classList.add('sale__list', 'sale__list-main');
-        console.log(data)
         
         data.forEach((item, index) => {  
           const li  = document.createElement('li');
@@ -25,6 +25,12 @@ const cardsRender = (data) => {
 
             let oldPrice = data[index].price;
             let discount = 0;
+            // переход на страницу карточки по клику
+            li.addEventListener('click', (e) => {
+                localStorage.setItem('downloadableProduct', JSON.stringify(item.title));
+                window.location.href = `${hrefSrc}/card.html`;
+            })
+
             if (data[index].discount) {
                 discount = data[index].discount;
                 oldPrice = Math.round(oldPrice + (oldPrice/100*discount));
@@ -57,4 +63,5 @@ const cardsRender = (data) => {
         })
   }
  init()
+
 
